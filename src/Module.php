@@ -5,7 +5,10 @@ use SlimApi\Service\ConfigService;
 
 class Module
 {
-    public function loadDependencies($container)
+    /**
+     * load the dependencies for the module.
+     */
+    public function loadDependencies()
     {
         return ConfigService::fetch(dirname(__DIR__));
     }
