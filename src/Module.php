@@ -5,6 +5,6 @@ class Module
 {
     public function loadDependencies($container)
     {
-        require __DIR__.'/dependencies.php';
+        return SlimApi\Service\ConfigService::fetch(dirname(__DIR__));
     }
 }
