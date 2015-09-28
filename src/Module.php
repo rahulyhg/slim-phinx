@@ -1,10 +1,12 @@
 <?php
 namespace SlimPhinx;
 
+use SlimApi\Service\ConfigService;
+
 class Module
 {
     public function loadDependencies($container)
     {
-        return SlimApi\Service\ConfigService::fetch(dirname(__DIR__));
+        return ConfigService::fetch(dirname(__DIR__));
     }
 }
