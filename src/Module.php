@@ -10,6 +10,11 @@ class Module
      */
     public function loadDependencies()
     {
-        return ConfigService::fetch(dirname(__DIR__));
+        $config = [];
+        $files  = glob(dirname(__DIR__).'/config/*.config.php', GLOB_BRACE);
+        foreach ($files as $file) {
+            $config = array_merge($config, (require $file));
+        }
+        return $config;
     }
 }
