@@ -1,8 +1,6 @@
 <?php
 namespace SlimPhinx;
 
-use SlimApi\Service\ConfigService;
-
 class Module
 {
     /**
