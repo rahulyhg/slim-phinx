@@ -1,5 +1,7 @@
 {
     "name": "slimphp-api/slim-phinx",
+    "description": "phinx migrations for slim-api",
+    "keywords": ["slim","api","phinx","slimapi"],
     "require": {
         "php": ">5.6",
         "robmorgan/phinx": "0.*"
