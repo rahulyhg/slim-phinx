@@ -4,20 +4,30 @@ $config['phinxApplication'] = function($container) {
     return new Phinx\Console\PhinxApplication;
 };
 
-$config['SlimApi\Database\DatabaseInterface'] = function($container) {
+$config['SlimApi\Migration\MigrationInterface'] = function($container) {
     return new SlimPhinx\Database\PhinxService($container->get('phinxApplication'));
 };
 
-$config['database.config.file'] = function($container) {
+$config['phinx.config.file'] = function($container) {
     $cwd = getcwd();
     $locator = new Symfony\Component\Config\FileLocator([$cwd . DIRECTORY_SEPARATOR]);
     return $locator->locate('phinx.yml', $cwd, true);
 };
 
 $config['database.config'] = function($container) {
-    $configFilePath = $container['database.config.file'];
+    $config         = $container['phinx.config'];
+    $environment    = $container['environment.name'];
+    $standardisedConfig    = $container['database.config']->getEnvironment($environment);
+    return $standardisedConfig;
+}
+
+$config['phinx.config'] = function($container) {
+    $configFilePath = $container['phinx.config.file'];
     $config = Phinx\Config\Config::fromYaml($configFilePath);
     return $config;
+};
+
+$config['SlimPhinx\Init'] = function($container) {
 };
 
 return $config;
