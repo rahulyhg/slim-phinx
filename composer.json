@@ -1,16 +1,16 @@
 {
     "name": "slimphp-api/slim-phinx",
-    "description": "phinx migrations for slim-api",
+    "description": "A module for slim-api for phinx migration, integrating migrations for slim-api",
     "keywords": ["slim","api","phinx","slimapi"],
     "require": {
         "php": ">5.6",
-        "robmorgan/phinx": "0.*"
+        "robmorgan/phinx": "0.*",
+        "slimphp-api/slim-api": "*@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "4.*",
         "mikey179/vfsStream": "1.*",
-        "satooshi/php-coveralls": "^0.7.0@dev",
-        "slimphp-api/slim-api": "dev-master"
+        "satooshi/php-coveralls": "^0.7.0@dev"
     },
     "license": "MIT",
     "authors": [
@@ -20,6 +20,7 @@
         }
     ],
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {"SlimPhinx\\": "src/"}
     },

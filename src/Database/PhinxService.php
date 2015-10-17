@@ -4,9 +4,9 @@ namespace SlimPhinx\Database;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use SlimApi\Interfaces\GeneratorServiceInterface;
-use SlimApi\Database\DatabaseInterface;
+use SlimApi\Migration\MigrationInterface;
 
-class PhinxService implements DatabaseInterface, GeneratorServiceInterface
+class PhinxService implements MigrationInterface, GeneratorServiceInterface
 {
     public $commands = [];
     private $application;
