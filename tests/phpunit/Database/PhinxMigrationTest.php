@@ -1,7 +1,7 @@
 <?php
-namespace SlimPhinxTest\Database;
+namespace SlimApi\PhinxTest\Database;
 
-use SlimPhinx\Database\PhinxMigration;
+use SlimApi\Phinx\Database\PhinxMigration;
 
 class PhinxMigrationTest extends \PHPUnit_Framework_TestCase
 {

@@ -1,7 +1,7 @@
 <?php
-namespace SlimPhinxTest\Database;
+namespace SlimApi\PhinxTest\Database;
 
-use SlimPhinx\Database\PhinxService;
+use SlimApi\Phinx\Database\PhinxService;
 use Symfony\Component\Console\Application;
 use org\bovigo\vfs\vfsStream;
 

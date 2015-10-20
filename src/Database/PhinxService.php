@@ -1,5 +1,5 @@
 <?php
-namespace SlimPhinx\Database;
+namespace SlimApi\Phinx\Database;
 
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
@@ -44,7 +44,7 @@ class PhinxService implements MigrationInterface, GeneratorServiceInterface
     public function create($name)
     {
         PhinxMigration::$commands = $this->commands;
-        $this->run('create', ['command' => 'create', 'name' => $name, '--class' => 'SlimPhinx\Database\PhinxMigration']);
+        $this->run('create', ['command' => 'create', 'name' => $name, '--class' => 'SlimApi\Phinx\Database\PhinxMigration']);
     }
 
     public function targetLocation($name)

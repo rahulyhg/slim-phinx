@@ -1,5 +1,5 @@
 <?php
-namespace SlimPhinx;
+namespace SlimApi\Phinx;
 
 class Module
 {
