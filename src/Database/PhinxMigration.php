@@ -1,5 +1,5 @@
 <?php
-namespace SlimPhinx\Database;
+namespace SlimApi\Phinx\Database;
 
 use Phinx\Migration\CreationInterface;
 

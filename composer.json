@@ -22,9 +22,9 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
-        "psr-4": {"SlimPhinx\\": "src/"}
+        "psr-4": {"SlimApi\\Phinx\\": "src/"}
     },
     "autoload-dev": {
-        "psr-4": {"SlimPhinxTest\\": "tests/phpunit/"}
+        "psr-4": {"SlimApi\\PhinxTest\\": "tests/phpunit/"}
     }
 }
