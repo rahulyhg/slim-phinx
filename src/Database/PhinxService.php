@@ -43,7 +43,12 @@ class PhinxService implements MigrationInterface, GeneratorServiceInterface
 
     public function create($name)
     {
+        // need to add updated_at, created_at columns manually
+        $this->processCommand('addColumn', 'updated_at', 'timestamp');
+        $this->processCommand('addColumn', 'created_at', 'timestamp');
+
         PhinxMigration::$commands = $this->commands;
+
         $this->run('create', ['command' => 'create', 'name' => $name, '--class' => 'SlimApi\Phinx\Database\PhinxMigration']);
     }
 
