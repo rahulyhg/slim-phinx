@@ -10,7 +10,7 @@ class PhinxService implements MigrationInterface, GeneratorServiceInterface
 {
     public $commands = [];
     private $application;
-    private $types = ['string', 'text', 'integer', 'biginteger', 'float', 'decimal', 'datetime', 'timestamp', 'time', 'date', 'binary', 'boolean'];
+    private $types = ['string', 'text', 'integer', 'biginteger', 'float', 'decimal', 'datetime', 'timestamp', 'time', 'date', 'binary', 'boolean', 'references'];
 
     public function __construct($phinxApp)
     {
@@ -29,7 +29,7 @@ class PhinxService implements MigrationInterface, GeneratorServiceInterface
                 $this->createTable(strtolower($arguments[0]));
                 break;
             case 'addColumn':
-                $arguments = array_pad($arguments, 5, null);
+                $arguments = array_pad($arguments, 7, null);
                 $this->addColumn(...$arguments);
                 break;
             case 'finalise':
@@ -69,7 +69,7 @@ class PhinxService implements MigrationInterface, GeneratorServiceInterface
         $command->run($input, $output);
     }
 
-    private function addColumn($name, $type, $limit, $nullable, $unique)
+    private function addColumn($name, $type, $limit, $nullable, $unique, $fkDelete, $fkUpdate)
     {
         if (!in_array($type, $this->types)) {
             throw new \Exception("Type not valid.");
@@ -96,7 +96,30 @@ class PhinxService implements MigrationInterface, GeneratorServiceInterface
             $extrasStr = $extrasStrPreFix.implode(", ", $extras).$extrasStrPostFix;
         }
 
-        $command          = sprintf('$table->addColumn("%s", "%s"%s);', $name, $type, $extrasStr);
+
+        switch ($type) {
+            case 'references':
+                if (in_array(strtoupper($fkDelete), ['SET_NULL', 'NO_ACTION', 'CASCADE', 'RESTRICT'])) {
+                    $fkDelete = strtoupper($fkDelete);
+                } else {
+                    $fkDelete = 'SET_NULL';
+                }
+
+                if (in_array(strtoupper($fkUpdate), ['SET_NULL', 'NO_ACTION', 'CASCADE', 'RESTRICT'])) {
+                    $fkUpdate = strtoupper($fkUpdate);
+                } else {
+                    $fkUpdate = 'SET_NULL';
+                }
+                // $refTable->addColumn('tag_id', 'integer')
+                //  ->addForeignKey("tag_id", "tags", "id", array("delete"=> "SET_NULL", "update"=> "NO_ACTION"))
+                $command = sprintf('$table->addColumn("%s", "%s"%s)->addForeignKey("%s_id", "%s", "id", array("delete"=> "%s", "update"=> "%s"))', $name, $type, $extrasStr, $name, $name, $fkDelete, $fkUpdate);
+                break;
+
+            default:
+                $command = sprintf('$table->addColumn("%s", "%s"%s);', $name, $type, $extrasStr);
+                break;
+        }
+
         $this->commands[] = $command;
     }
 
