@@ -88,10 +88,6 @@ class PhinxService implements MigrationInterface, GeneratorServiceInterface
             $extras[] = sprintf('"null" => %s', $nullable);
         }
 
-        if ('false' === $unique || 'true' === $unique) {
-            $extras[] = sprintf('"unique" => %s', $unique);
-        }
-
         if (count($extras) > 0) {
             $extrasStr = $extrasStrPreFix.implode(", ", $extras).$extrasStrPostFix;
         }
@@ -121,10 +117,20 @@ class PhinxService implements MigrationInterface, GeneratorServiceInterface
         }
 
         $this->commands[] = $command;
+
+        // if ('true' === $unique || 'true' === $index) {
+        if ('true' === $unique) {
+            $command          = sprintf('$table->addIndex(["%s"], ["unique" => %s]);', $name, $unique);
+            $this->commands[] = $command;
+        }
     }
 
     private function finalise()
     {
+        // need to add updated_at, created_at columns manually
+        $this->processCommand('addColumn', 'updated_at', 'timestamp');
+        $this->processCommand('addColumn', 'created_at', 'timestamp');
+
         $command          = '$table->create();';
         $this->commands[] = $command;
     }
