@@ -80,8 +80,8 @@ class PhinxServiceTest extends \PHPUnit_Framework_TestCase
     public function testFinaliseTable()
     {
         $this->phinxService->processCommand('finalise');
-        $this->assertEquals(1, count($this->phinxService->commands));
-        $this->assertEquals('$table->create();', $this->phinxService->commands[0]);
+        $this->assertEquals(3, count($this->phinxService->commands));
+        $this->assertEquals(['$table->addColumn("updated_at", "timestamp");', '$table->addColumn("created_at", "timestamp");', '$table->create();'], $this->phinxService->commands);
     }
 
     /**
