@@ -44,7 +44,6 @@ class PhinxService implements MigrationInterface, GeneratorServiceInterface
     public function create($name)
     {
         PhinxMigration::$commands = $this->commands;
-
         $this->run('create', ['command' => 'create', 'name' => $name, '--class' => 'SlimApi\Phinx\Database\PhinxMigration']);
     }
 
