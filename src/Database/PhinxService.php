@@ -102,6 +102,10 @@ class PhinxService implements MigrationInterface, GeneratorServiceInterface
 
     private function finalise()
     {
+        // need to add updated_at, created_at columns manually
+        $this->processCommand('addColumn', 'updated_at', 'timestamp');
+        $this->processCommand('addColumn', 'created_at', 'timestamp');
+
         $command          = '$table->create();';
         $this->commands[] = $command;
     }
