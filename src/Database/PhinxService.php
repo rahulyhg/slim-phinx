@@ -88,16 +88,18 @@ class PhinxService implements MigrationInterface, GeneratorServiceInterface
             $extras[] = sprintf('"null" => %s', $nullable);
         }
 
-        if ('false' === $unique || 'true' === $unique) {
-            $extras[] = sprintf('"unique" => %s', $unique);
-        }
-
         if (count($extras) > 0) {
             $extrasStr = $extrasStrPreFix.implode(", ", $extras).$extrasStrPostFix;
         }
 
         $command          = sprintf('$table->addColumn("%s", "%s"%s);', $name, $type, $extrasStr);
         $this->commands[] = $command;
+
+        // if ('true' === $unique || 'true' === $index) {
+        if ('true' === $unique) {
+            $command          = sprintf('$table->addIndex(["%s"], ["unique" => %s]);', $name, $unique);
+            $this->commands[] = $command;
+        }
     }
 
     private function finalise()
