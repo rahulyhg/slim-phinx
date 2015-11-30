@@ -10,7 +10,7 @@ class PhinxService implements MigrationInterface, GeneratorServiceInterface
 {
     public $commands = [];
     private $application;
-    private $types = ['string', 'text', 'integer', 'biginteger', 'float', 'decimal', 'datetime', 'timestamp', 'time', 'date', 'binary', 'boolean', 'references'];
+    private $types = ['string', 'text', 'integer', 'biginteger', 'float', 'decimal', 'datetime', 'timestamp', 'time', 'date', 'binary', 'boolean', 'reference'];
 
     public function __construct($phinxApp)
     {
@@ -75,26 +75,8 @@ class PhinxService implements MigrationInterface, GeneratorServiceInterface
             throw new \Exception("Type not valid.");
         }
 
-        $extras           = [];
-        $extrasStrPreFix  = ", [";
-        $extrasStrPostFix = "]";
-        $extrasStr        = "";
-
-        if (!is_null($limit)) {
-            $extras[] = sprintf('"limit" => %d', $limit);
-        }
-
-        if ('false' === $nullable || 'true' === $nullable) {
-            $extras[] = sprintf('"null" => %s', $nullable);
-        }
-
-        if (count($extras) > 0) {
-            $extrasStr = $extrasStrPreFix.implode(", ", $extras).$extrasStrPostFix;
-        }
-
-
         switch ($type) {
-            case 'references':
+            case 'reference':
                 if (in_array(strtoupper($fkDelete), ['SET_NULL', 'NO_ACTION', 'CASCADE', 'RESTRICT'])) {
                     $fkDelete = strtoupper($fkDelete);
                 } else {
@@ -104,15 +86,20 @@ class PhinxService implements MigrationInterface, GeneratorServiceInterface
                 if (in_array(strtoupper($fkUpdate), ['SET_NULL', 'NO_ACTION', 'CASCADE', 'RESTRICT'])) {
                     $fkUpdate = strtoupper($fkUpdate);
                 } else {
-                    $fkUpdate = 'SET_NULL';
+                    $fkUpdate = 'CASCADE';
                 }
+
+                if ('SET_NULL' === $fkDelete || 'SET_NULL' === $fkUpdate) {
+                    $nullable = 'true';
+                }
+
                 // $refTable->addColumn('tag_id', 'integer')
                 //  ->addForeignKey("tag_id", "tags", "id", array("delete"=> "SET_NULL", "update"=> "NO_ACTION"))
-                $command = sprintf('$table->addColumn("%s", "%s"%s)->addForeignKey("%s_id", "%s", "id", array("delete"=> "%s", "update"=> "%s"))', $name, $type, $extrasStr, $name, $name, $fkDelete, $fkUpdate);
+                $command = sprintf('$table->addColumn("%s_id", "integer"%s)->addForeignKey("%s_id", "%s", "id", array("delete" => "%s", "update" => "%s"));', $name, $this->getExtrasStr($limit, $nullable), $name, $name, $fkDelete, $fkUpdate);
                 break;
 
             default:
-                $command = sprintf('$table->addColumn("%s", "%s"%s);', $name, $type, $extrasStr);
+                $command = sprintf('$table->addColumn("%s", "%s"%s);', $name, $type, $this->getExtrasStr($limit, $nullable));
                 break;
         }
 
@@ -123,6 +110,27 @@ class PhinxService implements MigrationInterface, GeneratorServiceInterface
             $command          = sprintf('$table->addIndex(["%s"], ["unique" => %s]);', $name, $unique);
             $this->commands[] = $command;
         }
+    }
+
+    private function getExtrasStr($limit, $nullable)
+    {
+        $extras = [];
+
+        if (!is_null($limit)) {
+            $extras[] = sprintf('"limit" => %d', $limit);
+        }
+
+        if ('false' === $nullable || 'true' === $nullable) {
+            $extras[] = sprintf('"null" => %s', $nullable);
+        }
+
+        if (count($extras) === 0) {
+            return '';
+        }
+
+        $extrasStrPreFix  = ", [";
+        $extrasStrPostFix = "]";
+        return $extrasStrPreFix.implode(", ", $extras).$extrasStrPostFix;
     }
 
     private function finalise()
