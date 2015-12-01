@@ -1,11 +1,11 @@
 <?php
 $config = [];
-$config['phinxApplication'] = function($container) {
+$config['Phinx\Console\PhinxApplication'] = function($container) {
     return new Phinx\Console\PhinxApplication;
 };
 
 $config['SlimApi\Migration\MigrationInterface'] = function($container) {
-    return new SlimApi\Phinx\Database\PhinxService($container->get('phinxApplication'));
+    return new SlimApi\Phinx\Database\PhinxService($container->get('Phinx\Console\PhinxApplication'));
 };
 
 $config['phinx.config.file'] = function($container) {
