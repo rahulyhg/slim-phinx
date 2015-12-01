@@ -95,20 +95,18 @@ class PhinxService implements MigrationInterface, GeneratorServiceInterface
 
                 // $refTable->addColumn('tag_id', 'integer')
                 //  ->addForeignKey("tag_id", "tags", "id", array("delete"=> "SET_NULL", "update"=> "NO_ACTION"))
-                $command = sprintf('$table->addColumn("%s_id", "integer"%s)->addForeignKey("%s_id", "%s", "id", array("delete" => "%s", "update" => "%s"));', $name, $this->getExtrasStr($limit, $nullable), $name, $name, $fkDelete, $fkUpdate);
+                $this->commands[] = sprintf('$table->addColumn("%s_id", "integer"%s);', $name, $this->getExtrasStr($limit, $nullable));
+                $this->commands[] = sprintf('$table->addForeignKey("%s_id", "%s", "id", array("delete" => "%s", "update" => "%s"));', $name, $name, $fkDelete, $fkUpdate);
                 break;
 
             default:
-                $command = sprintf('$table->addColumn("%s", "%s"%s);', $name, $type, $this->getExtrasStr($limit, $nullable));
+                $this->commands[] = sprintf('$table->addColumn("%s", "%s"%s);', $name, $type, $this->getExtrasStr($limit, $nullable));
                 break;
         }
 
-        $this->commands[] = $command;
-
         // if ('true' === $unique || 'true' === $index) {
         if ('true' === $unique) {
-            $command          = sprintf('$table->addIndex(["%s"], ["unique" => %s]);', $name, $unique);
-            $this->commands[] = $command;
+            $this->commands[] = sprintf('$table->addIndex(["%s"], ["unique" => %s]);', $name, $unique);
         }
     }
 
